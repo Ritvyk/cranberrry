@@ -1,17 +1,23 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useCBTaskSupervisor } from "./useAgentSupervisor";
 import { useCBTaskManager } from "./useAgentTaskManager";
 import { useCBDispatch } from "./useAgentDispatch";
 import { updateAgent } from "../core/agentSlice";
 import type { CBBlockSupervisorCallbacks } from "../core/agentSupervisor";
+import type { CBTagConfig, CBMessageBlock } from "../types";
+import mitt from "mitt";
+import type { Emitter } from "mitt";
+
+// Use the same global emitter as CranberrryRenderer
+const globalEmitter: Emitter<any> = (typeof window !== 'undefined' ? ((window as any).__cranberrryEmitter || ((window as any).__cranberrryEmitter = mitt())) : mitt());
 
 export function useCBController({
   agentId,
-  tags,
+  tagConfigs,
   callbacks,
 }: {
   agentId: string;
-  tags: string[];
+  tagConfigs: CBTagConfig[];
   callbacks: CBBlockSupervisorCallbacks;
 }) {
   const [prompt, setPrompt] = useState("");
@@ -19,6 +25,7 @@ export function useCBController({
   const [currentTaskId, setCurrentTaskId] = useState<string | null>(null);
   const currentTaskIdRef = useRef<string | null>(null);
   const dispatch = useCBDispatch();
+  const emitter = globalEmitter;
 
   const {
     tasks,
@@ -27,6 +34,8 @@ export function useCBController({
     removeTask,
     getTask,
     setTaskStatus,
+    addMessageBlockToTask,
+    // addMessageBlock, getMessageBlocks imported above
   } = useCBTaskManager();
 
   // Always keep the ref in sync with state
@@ -51,15 +60,34 @@ export function useCBController({
     },
   };
 
-  const {
-    status,
-    startTask,
-    parseChunk,
-    complete,
-    error: supervisorError,
-    errorCallback,
-    reset,
-  } = useCBTaskSupervisor({ callbacks: wrappedCallbacks });
+  // Internal message management
+  const [messageBlocks, setMessageBlocks] = useState<CBMessageBlock[]>([]);
+
+  // Keep messageBlocks in sync with the store for the current task
+  // This ensures that if the store updates (e.g., from another tab or event), we always show the latest
+  useEffect(() => {
+    if (currentTaskId) {
+      setMessageBlocks(getTask(currentTaskId)?.messageBlocks || []);
+    } else {
+      setMessageBlocks([]);
+    }
+  }, [currentTaskId, tasks]);
+
+  const supervisor = useCBTaskSupervisor({
+    callbacks: {
+      ...wrappedCallbacks,
+      onBlockProcessed: (block: CBMessageBlock) => {
+        if (currentTaskIdRef.current) {
+          addMessageBlockToTask(currentTaskIdRef.current, block);
+        }
+        callbacks.onBlockProcessed?.(block);
+      },
+    },
+    tagConfigs,
+    emitter,
+    taskId: currentTaskIdRef.current || "",
+  });
+  const { status, startTask, parseChunk, complete, error: supervisorError, errorCallback, reset } = supervisor;
 
   const isRunning = status === "ongoing";
 
@@ -73,9 +101,11 @@ export function useCBController({
       setCurrentTaskId(newTaskId);
       currentTaskIdRef.current = newTaskId;
       dispatch(updateAgent({ id: agentId, isBusy: true }));
-      startTask(tags);
+      // messageBlocks will be reset by useEffect when currentTaskId changes
+      startTask();
+      return newTaskId;
     },
-    [startTask, createTask, tags, agentId, dispatch]
+    [startTask, createTask, tagConfigs, agentId, dispatch]
   );
 
   // Expose the error function for simulation
@@ -101,5 +131,7 @@ export function useCBController({
     getTask,
     setTaskStatus,
     completeWithError,
+    messageBlocks,
+    emitter,
   };
 } 

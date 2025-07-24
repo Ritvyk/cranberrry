@@ -20,4 +20,6 @@ export function useCBSelector<T>(selector: (state: CBState) => T): T {
   }, [store, selector]);
 
   return selected;
-} 
+}
+
+export const useAgentSelector = useCBSelector; 

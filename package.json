@@ -21,6 +21,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "mitt": "^3.0.1",
+    "nanoid": "^5.1.5",
     "react": "^19.1.0"
   },
   "devDependencies": {

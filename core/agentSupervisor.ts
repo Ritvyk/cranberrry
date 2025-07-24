@@ -1,83 +1,86 @@
 import type { CBTaskStatus } from "../types";
+import type { CBTagConfig, CBMessageBlock } from "../types";
+import {nanoid} from "nanoid"
+import type { Emitter } from "mitt";
+import mitt from "mitt";
+
+// Use the same global emitter as CranberrryRenderer
+const globalEmitter: Emitter<any> = (typeof window !== 'undefined' ? ((window as any).__cranberrryEmitter || ((window as any).__cranberrryEmitter = mitt())) : mitt());
 
 export type CBBlockSupervisorCallbacks = {
   onBlockFound?: (tag: string) => void;
-  onBlockProcessed?: (tag: string, content: any) => void;
+  onBlockProcessed?: (block: CBMessageBlock) => void;
   onComplete?: () => void;
   onError?: (err: string) => void;
 };
 
 export function createAgentSupervisor({
   callbacks,
+  tagConfigs,
+  emitter = globalEmitter,
+  taskId,
 }: {
   callbacks: CBBlockSupervisorCallbacks;
+  tagConfigs: CBTagConfig[];
+  emitter?: Emitter<any>;
+  taskId: string;
 }) {
   let status: CBTaskStatus = "idle";
   let buffer = "";
-  let tags: string[] = [];
-  // Track open tag positions for robust streaming
   let openTagPositions: { tag: string; index: number }[] = [];
-
-  // Custom content parsers for certain tags (e.g., JSON for content-block)
-  const contentParsers: Record<string, (raw: string) => any> = {
-    "content-block": (raw) => {
-      try {
-        return JSON.parse(raw);
-      } catch {
-        return raw;
-      }
-    },
-  };
 
   function getStatus() {
     return status;
   }
 
-  function startTask({ tags: taskTags }: { tags: string[] }) {
+  function startTask() {
     status = "ongoing";
     buffer = "";
-    tags = taskTags;
     openTagPositions = [];
-    console.log("[AgentSupervisor] startTask: tags=", tags);
+    // No-op: tagConfigs are static for this supervisor
   }
 
   function parseChunk(chunk: string) {
     if (status !== "ongoing") return;
     buffer += chunk;
-   
+    console.log("parseChunk", buffer)
     let foundBlock = false;
-    // For each tag, scan for opening tags and track their positions
-    for (const tag of tags) {
+    for (const tagConfig of tagConfigs) {
+      const { tag, processor, component } = tagConfig;
       const openingTagRegex = new RegExp(`<${tag}>`, "g");
       let match: RegExpExecArray | null;
       while ((match = openingTagRegex.exec(buffer)) !== null) {
-        // Only track if not already tracked at this position
         if (!openTagPositions.some(t => t.tag === tag && t.index === match!.index)) {
           openTagPositions.push({ tag, index: match.index });
           callbacks.onBlockFound?.(tag);
-         
         }
       }
-    }
-    // For each tag, process complete blocks
-    for (const tag of tags) {
-       
-      const blockRegex = new RegExp(`<${tag}>([\s\S]*?)<\/${tag}>`, "g");
-     
-      let match: RegExpExecArray | null;
+      // Process complete blocks
+      const blockRegex = new RegExp(`<${tag}>([\\s\\S]*?)<\/${tag}>`, "g");
       while ((match = blockRegex.exec(buffer)) !== null) {
-        let content = match[1];
-        if (contentParsers[tag]) {
+        let rawContent = match[1];
+        let content: any = rawContent;
+        if (processor === 'JSON') {
           try {
-            content = contentParsers[tag](content);
-          } catch {}
+            content = JSON.parse(rawContent);
+          } catch {
+            content = rawContent;
+          }
         }
-        callbacks.onBlockProcessed?.(tag, content);
-       
+        // Compose message block
+        const block: CBMessageBlock = {
+          id: nanoid(),
+          tag,
+          content,
+          createdAt: Date.now(),
+          component,
+          meta: { taskId },
+        };
+        callbacks.onBlockProcessed?.(block);
+        console.log("onBlockProcessed", block)
+        emitter.emit('message', { taskId, block });
         buffer = buffer.slice(0, match.index) + buffer.slice(match.index + match[0].length);
-      
         openTagPositions = openTagPositions.filter(t => !(t.tag === tag && t.index === match!.index));
-       
         blockRegex.lastIndex = 0;
         foundBlock = true;
       }
@@ -105,7 +108,6 @@ export function createAgentSupervisor({
   function reset() {
     status = "idle";
     buffer = "";
-    tags = [];
     openTagPositions = [];
     
   }

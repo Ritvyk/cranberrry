@@ -3,6 +3,7 @@ import {
   type CBAction,
   type CBAgent,
   type CBTask,
+  type CBMessageBlock,
 } from '../types';
 
 const initialState: CBState = {
@@ -10,7 +11,7 @@ const initialState: CBState = {
   tasks: [],
 };
 
-export function cbAgentReducer(
+export function CBAgentReducer(
   state: CBState = initialState,
   action: CBAction
 ): CBState {
@@ -48,6 +49,15 @@ export function cbAgentReducer(
         ...state,
         tasks: state.tasks.filter((task) => task.id !== action.payload.id),
       };
+    case 'ADD_MESSAGE_BLOCK':
+      return {
+        ...state,
+        tasks: state.tasks.map((task) =>
+          task.id === action.payload.taskId
+            ? { ...task, messageBlocks: [...(task.messageBlocks || []), action.payload.block] }
+            : task
+        ),
+      };
     default:
       return state;
   }
@@ -81,6 +91,11 @@ export const updateTask = (
 export const removeTask = (id: string): CBAction => ({
   type: 'REMOVE_TASK',
   payload: { id },
+});
+
+export const addMessageBlock = (taskId: string, block: CBMessageBlock): CBAction => ({
+  type: 'ADD_MESSAGE_BLOCK',
+  payload: { taskId, block },
 });
 
 // Utility to get tasks for a specific agent

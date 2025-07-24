@@ -1,11 +1,12 @@
 import { useCallback } from "react";
-import { type CBTask, type CBTaskStatus } from "../types";
+import { type CBMessageBlock, type CBTask, type CBTaskStatus } from "../types";
 import { useCBDispatch } from "./useAgentDispatch";
 import { useCBSelector } from "./useAgentSelector";
 import {
   addTask as addTaskAction,
   updateTask as updateTaskAction,
   removeTask as removeTaskAction,
+  addMessageBlock as addMessageBlockAction,
 } from "../core/agentSlice";
 
 export function useCBTaskManager() {
@@ -44,6 +45,10 @@ export function useCBTaskManager() {
     dispatch(updateTaskAction({ id, status, updatedAt: Date.now() }));
   }, [dispatch]);
 
+  const addMessageBlockToTask = useCallback((taskId: string, block: CBMessageBlock) => {
+    dispatch(addMessageBlockAction(taskId, block));
+  }, [dispatch]);
+
   return {
     tasks,
     createTask,
@@ -51,5 +56,6 @@ export function useCBTaskManager() {
     removeTask,
     getTask,
     setTaskStatus,
+    addMessageBlockToTask,
   };
 } 
