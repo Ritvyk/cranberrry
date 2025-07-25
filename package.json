@@ -1,17 +1,17 @@
 {
   "name": "cranberrry",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "AI Agentic Framework For Frontend",
   "keywords": [
     "agentic"
   ],
-  "homepage": "https://gitlab.com/ritvyk/cranberrry#readme",
+  "homepage": "https://github.com/Ritvyk/cranberrry#readme",
   "bugs": {
-    "url": "https://gitlab.com/ritvyk/cranberrry/issues"
+    "url": "https://github.com/Ritvyk/cranberrry/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/ritvyk/cranberrry.git"
+    "url": "git+https://github.com/Ritvyk/cranberrry.git"
   },
   "license": "ISC",
   "author": "direxsion labs",
