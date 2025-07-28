@@ -1,6 +1,6 @@
 {
   "name": "cranberrry",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "AI Agentic UI Framework For Frontend",
   "keywords": [
     "agentic",
@@ -21,7 +21,7 @@
     "typescript-library",
     "npm-package"
   ],
-  "homepage": "https://github.com/Ritvyk/cranberrry#readme",
+  "homepage": "https://www.cranberrry.com",
   "bugs": {
     "url": "https://github.com/Ritvyk/cranberrry/issues"
   },
