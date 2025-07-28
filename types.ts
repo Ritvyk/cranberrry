@@ -1,5 +1,4 @@
-// Cranberrry Agentic Framework Types (CB Unified)
-
+'use client'
 export type CBListener = () => void;
 
 export interface CBStore {

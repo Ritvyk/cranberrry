@@ -1,6 +1,6 @@
 {
   "name": "cranberrry",
-  "version": "0.0.9",
+  "version": "0.1.1",
   "description": "AI Agentic UI Framework For Frontend",
   "keywords": [
     "agentic",
@@ -32,9 +32,30 @@
   "license": "ISC",
   "author": "Ritvik",
   "type": "module",
-  "main": "index.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build",
+    "prepare": "npm run build",
+    "typecheck": "tsc --noEmit",
+    "publish": "npm run clean && npm run build && npm publish",
+    "publish:dry-run": "npm run clean && npm run build && npm publish --dry-run"
   },
   "dependencies": {
     "mitt": "^3.0.1",
@@ -42,6 +63,9 @@
     "react": "^19.1.0"
   },
   "devDependencies": {
-    "@types/react": "^19.1.8"
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.3"
   }
 }
