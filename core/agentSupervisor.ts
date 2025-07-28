@@ -19,25 +19,25 @@ export function createAgentSupervisor({
   callbacks,
   tagConfigs,
   emitter = globalEmitter,
-  taskId,
 }: {
   callbacks: CBBlockSupervisorCallbacks;
   tagConfigs: CBTagConfig[];
   emitter?: Emitter<any>;
-  taskId: string;
 }) {
   let status: CBTaskStatus = "idle";
   let buffer = "";
+  let currentTaskId: string = "";
   let openTagPositions: { tag: string; index: number }[] = [];
 
   function getStatus() {
     return status;
   }
 
-  function startTask() {
+  function startTask(taskId: string) {
     status = "ongoing";
     buffer = "";
     openTagPositions = [];
+    currentTaskId = taskId;
     // No-op: tagConfigs are static for this supervisor
   }
 
@@ -68,6 +68,8 @@ export function createAgentSupervisor({
             content = rawContent;
           }
         }
+
+       
         // Compose message block
         const block: CBMessageBlock = {
           id: nanoid(),
@@ -75,11 +77,11 @@ export function createAgentSupervisor({
           content,
           createdAt: Date.now(),
           component,
-          meta: { taskId },
+          taskId: currentTaskId,
         };
         callbacks.onBlockProcessed?.(block);
-  
-        emitter.emit('message', { taskId, block });
+        console.log("content", currentTaskId,block)
+        emitter.emit('message', { taskId: currentTaskId, block });
         buffer = buffer.slice(0, match.index) + buffer.slice(match.index + match[0].length);
         openTagPositions = openTagPositions.filter(t => !(t.tag === tag && t.index === match!.index));
         blockRegex.lastIndex = 0;

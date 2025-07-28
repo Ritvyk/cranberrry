@@ -13,23 +13,21 @@ export function useCBTaskSupervisor({
   callbacks,
   tagConfigs,
   emitter = globalEmitter,
-  taskId,
 }: {
   callbacks: CBBlockSupervisorCallbacks;
   tagConfigs: CBTagConfig[];
   emitter?: Emitter<any>;
-  taskId: string;
 }) {
   const supervisorRef = useRef<ReturnType<typeof createAgentSupervisor> | null>(null);
   const [status, setStatus] = useState<CBTaskStatus>("idle");
   const [error, setError] = useState<string | null>(null);
 
   if (!supervisorRef.current) {
-    supervisorRef.current = createAgentSupervisor({ callbacks, tagConfigs, emitter, taskId });
+    supervisorRef.current = createAgentSupervisor({ callbacks, tagConfigs, emitter });
   }
 
-  const startTask = useCallback(() => {
-    supervisorRef.current?.startTask();
+  const startTask = useCallback((taskId: string) => {
+    supervisorRef.current?.startTask(taskId);
     setStatus("ongoing");
     setError(null);
   }, []);

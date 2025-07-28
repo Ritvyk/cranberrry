@@ -36,10 +36,10 @@ export interface CBTagConfig {
 export interface CBMessageBlock {
   id: string; // unique per block
   tag: string;
+  taskId: string;
   content: any; // processed content (string or object)
   createdAt: number;
   component: React.ComponentType<{ ai: any }>;
-  meta?: Record<string, any>;
 }
 
 export interface CBTask {

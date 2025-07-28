@@ -46,8 +46,7 @@ export function useCBController({
   const wrappedCallbacks = {
     ...callbacks,
     onComplete: () => {
-      console.log("onComplete", agentId)
-      console.log(currentTaskIdRef.current, agentId)
+     
 
       if(currentTaskIdRef.current) {
         updateTask(currentTaskIdRef.current, { status: 'completed', updatedAt: Date.now() })
@@ -89,7 +88,6 @@ export function useCBController({
     },
     tagConfigs,
     emitter,
-    taskId: currentTaskIdRef.current || "",
   });
   const { status, startTask, parseChunk, complete, error: supervisorError, errorCallback, reset } = supervisor;
 
@@ -102,11 +100,12 @@ export function useCBController({
      
       setErrorMessage(null);
       const newTaskId = createTask(agentId, newPrompt, newMeta);
+     
       setCurrentTaskId(newTaskId);
       currentTaskIdRef.current = newTaskId;
       dispatch(updateAgent({ id: agentId, isBusy: true }));
       // messageBlocks will be reset by useEffect when currentTaskId changes
-      startTask();
+      startTask(newTaskId);
       return newTaskId;
     },
     [startTask, createTask, tagConfigs, agentId, dispatch]
