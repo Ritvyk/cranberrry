@@ -1,6 +1,6 @@
 {
   "name": "cranberrry",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "AI Agentic UI Framework For Frontend",
   "keywords": [
     "agentic",
@@ -54,7 +54,6 @@
     "prepublishOnly": "npm run clean && npm run build",
     "prepare": "npm run build",
     "typecheck": "tsc --noEmit"
-   
   },
   "dependencies": {
     "mitt": "^3.0.1",
@@ -76,5 +75,6 @@
     "react-dom": "^18.0.0",
     "tsup": "^8.0.2",
     "typescript": "^5.4.3"
-  }
+  },
+  "sideEffects": false
 }

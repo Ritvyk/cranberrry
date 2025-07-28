@@ -1,136 +1,203 @@
-# Cranberrry: AI Agentic State Management Framework 🤖
+# Cranberrry
 
-Cranberrry is a modern, type-safe, redux-inspired state management library for building robust AI agentic flows in frontend SaaS applications. It is framework-agnostic, React-independent, and designed for extensibility and ease of use.
+AI Agentic UI Framework For Frontend
 
-This guide will help you to integrate cranberrry and run your first agent with just a few lines of code in your React application. Cranberrry is fairly customisable and you can hook it up with any particular UI of your choice whether it's custom UI or shadcn ui library. We give you pre-implemented complex logical skeletons to run your AI Agents in your React application so you can hook up any UI of your choice to it.
+## 🚀 Quick Start
 
-> React Supported Version: ^19.1.0
+### Installation
 
-## 🚀 Installation
-
-Choose your desired package manager to install cranberrry in your React application:
-
-### 📦 npm
 ```bash
 npm install cranberrry
 ```
 
-### 🧶 yarn
-```bash
-yarn add cranberrry
-```
+### Basic Usage
 
-### ⚡ pnpm
-```bash
-pnpm install cranberrry
-```
+```tsx
+'use client'
 
-## 🎯 Quick Start
+import { useCBAgent, useCBTaskManager, CranberrryProvider, createCBStore } from 'cranberrry'
 
-### 1️⃣ Initialize AI Agents
+// Create a store
+const store = createCBStore(CBAgentReducer, {
+  agents: [],
+  tasks: []
+})
 
-To initialize AI Agents you need to use `CBAgent` interface to start defining your Agents.
-
-```typescript
-import type { CBAgent } from "cranberrry"
-
-const orion: CBAgent = {
-  id: "orion",
-  name: "Orion",
-  description: "A helpful assistant that can answer questions and help with tasks",
-  face: "https://i.imgur.com/1234567890.png",
-  designation: "Assistant",
-  introduction: "I am a helpful assistant that can answer questions and help with tasks",
-  isActive: true,
-  isAvailable: true,
-  isBusy: false
-}
-```
-
-### 2️⃣ Export Your Defined AI Agents
-
-To export your defined AI Agents you need to use `CBAgent[]` interface to start defining your Agents.
-
-```typescript
-import type { CBAgent } from "cranberrry"
-
-const agents: CBAgent[] = [orion] // add many more
-
-export default agents;
-```
-
-### 3️⃣ Initialize Agents Store
-
-Initialize agents store using `createCBStore` to supply all the AI agents that we have defined previously in `agent.ts` file to our frontend React application.
-
-```typescript
-import { createCBStore, CBAgentReducer, type CBState } from "cranberrry";
-import agents from "./agents";
-
-const initialState: CBState = {
-  agents: agents,
-  tasks: [],
-}
-
-const agentStore = createCBStore(CBAgentReducer, initialState)  
-
-export default agentStore
-```
-
-### 4️⃣ Wrap It Up With Provider
-
-Wrap your `main.tsx` or `app.tsx` or `entry` file with `CranberrryProvider` to supply the `agentStore` to your application.
-
-```typescript
-import App from './App.tsx'
-import { CranberrryProvider } from 'cranberrry'
-import agentStore from './agentStore.ts'
-
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <CranberrryProvider store={agentStore}>
-      <App />
+// Wrap your app with the provider
+function App() {
+  return (
+    <CranberrryProvider store={store}>
+      <YourApp />
     </CranberrryProvider>
-  </StrictMode>,
-)
+  )
+}
+
+// Use the hooks in your components
+function YourComponent() {
+  const { agents } = useCBAgent()
+  const { tasks, createTask } = useCBTaskManager()
+
+  return (
+    <div>
+      <h2>Agents: {agents.length}</h2>
+      <h2>Tasks: {tasks.length}</h2>
+    </div>
+  )
+}
 ```
 
-## ✨ Features
+## 📦 Package Structure
 
-- 🔧 **Centralized, type-safe state** for AI agents and their tasks
-- 🔄 **Redux-like API**: `createStore`, `dispatch`, `subscribe`, `getState`
-- 🤖 **Agent Management**: Easy initialization and management of AI agents
-- 📋 **Task Management**: Handle agent tasks with built-in state management
+The package is built with:
+- **ESM** and **CJS** support
+- **TypeScript** declarations
+- **Tree-shaking** friendly
+- **Next.js** compatible
+- **React 18+** support
 
-- 🧩 **Modular Architecture**: Extensible and robust design
-- 🛡️ **Type Safety**: Full TypeScript support with comprehensive type definitions
+### Build Output
 
-## 📚 Documentation
+```
+dist/
+├── index.js      # CommonJS build
+├── index.mjs     # ESM build  
+├── index.d.ts    # TypeScript declarations
+└── index.d.cts   # CommonJS TypeScript declarations
+```
 
-Full documentation is available in the [Cranberrry](https://www.cranberrry.com) with:
-- 📦 **Installation** (npm, yarn, pnpm)
-- 🎮 **Playground** (try out agent/task management)
-- 📖 **API Reference** (types, store, hooks)
-- ⚡ **Features** (agent/task management, hooks, supervisor, etc.)
+## 🔧 Configuration
 
-## 🎮 Playground
+### Next.js Configuration
 
-Try the playground in the documentation app to experiment with agents and tasks interactively.
+The package is fully compatible with Next.js. No additional configuration required.
 
-## 🐛 Bug Report
+### TypeScript
 
-If you encounter any bugs or issues, please report them on our [GitHub Issues](https://github.com/Ritvyk/cranberrry/issues) page.
+The package includes full TypeScript support with comprehensive type definitions.
 
-When reporting a bug, please include:
-- A clear description of the issue
-- Steps to reproduce the problem
-- Expected vs actual behavior
-- Version of cranberrry you're using
-- Your environment details (Node.js version, React version, etc.)
+## 🎯 Available Hooks
 
-We appreciate your feedback and contributions to make cranberrry better!
+### `useCBAgent()`
+Returns agents state and utility functions.
 
+```tsx
+const { agents, getAgentById } = useCBAgent()
+```
 
-## 📄 License
+### `useCBTaskManager()`
+Returns tasks state and task management functions.
 
-ISC 
+```tsx
+const { 
+  tasks, 
+  createTask, 
+  updateTask, 
+  removeTask,
+  getTask,
+  setTaskStatus 
+} = useCBTaskManager()
+```
+
+### `useCBDispatch()`
+Returns the store dispatch function.
+
+```tsx
+const dispatch = useCBDispatch()
+```
+
+### `useCBSelector(selector)`
+Returns selected state from the store.
+
+```tsx
+const agents = useCBSelector(state => state.agents)
+```
+
+## 🏗️ Architecture
+
+### Store Structure
+
+```tsx
+interface CBState {
+  agents: CBAgent[]
+  tasks: CBTask[]
+}
+```
+
+### Agent Interface
+
+```tsx
+interface CBAgent {
+  id: string
+  name: string
+  face?: string
+  designation?: string
+  description?: string
+  introduction?: string
+  isActive: boolean
+  isAvailable: boolean
+  isBusy: boolean
+}
+```
+
+### Task Interface
+
+```tsx
+interface CBTask {
+  id: string
+  agentId: string
+  input: string
+  status: 'idle' | 'ongoing' | 'completed' | 'failed'
+  createdAt: number
+  updatedAt: number
+  meta?: Record<string, any>
+  response?: string
+  messageBlocks?: CBMessageBlock[]
+}
+```
+
+## 🔄 Recent Fixes
+
+### Version 0.1.4
+- ✅ Fixed Next.js compatibility issues
+- ✅ Resolved module resolution errors
+- ✅ Updated build configuration for optimal bundling
+- ✅ Added proper ESM/CJS dual package support
+- ✅ Fixed TypeScript declaration exports
+- ✅ Removed deprecated Next.js config options
+- ✅ Added `sideEffects: false` for better tree-shaking
+
+## 🛠️ Development
+
+### Building the Package
+
+```bash
+npm run build
+```
+
+### Development Mode
+
+```bash
+npm run dev
+```
+
+### Type Checking
+
+```bash
+npm run typecheck
+```
+
+## 📝 License
+
+ISC
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## 📞 Support
+
+For issues and questions, please visit: https://github.com/Ritvyk/cranberrry/issues 

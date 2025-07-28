@@ -10,6 +10,11 @@ export default defineConfig({
   treeshake: true,
   external: ['react', 'react-dom', 'react/jsx-runtime'],
   onSuccess: 'tsc --emitDeclarationOnly --declaration',
+  outExtension({ format }) {
+    return {
+      js: format === 'esm' ? '.mjs' : '.js',
+    }
+  },
   esbuildOptions(options) {
     options.banner = {
       js: '// cranberrry - AI Agentic UI Framework For Frontend\n// https://github.com/Ritvyk/cranberrry\n',
