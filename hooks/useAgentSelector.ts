@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useRef, useState } from 'react';
 import { useCranberrryStore } from '../provider/CranberrryProvider';
 import { type CBState } from '../types';

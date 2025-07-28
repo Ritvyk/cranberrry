@@ -1,3 +1,4 @@
+'use client'
 import { useRef, useState, useCallback } from "react";
 import { createAgentSupervisor, type CBBlockSupervisorCallbacks } from "../core/agentSupervisor";
 import type { CBTaskStatus } from "../types";

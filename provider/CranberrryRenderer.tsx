@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from 'react';
 import { useAgentSelector } from '../hooks/useAgentSelector';
 import type { CBMessageBlock } from '../types';

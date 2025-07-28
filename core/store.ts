@@ -1,3 +1,4 @@
+'use client'
 import { type CBListener, type CBStore } from '../types';
 import { type CBState, type CBAction } from '../types';
 

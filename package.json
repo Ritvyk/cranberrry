@@ -1,7 +1,7 @@
 {
   "name": "cranberrry",
-  "version": "0.0.4",
-  "description": "AI Agentic Framework For Frontend",
+  "version": "0.0.5",
+  "description": "AI Agentic UI Framework For Frontend",
   "keywords": [
     "agentic"
   ],
@@ -14,7 +14,7 @@
     "url": "git+https://github.com/Ritvyk/cranberrry.git"
   },
   "license": "ISC",
-  "author": "direxsion labs",
+  "author": "Ritvik",
   "type": "module",
   "main": "index.ts",
   "scripts": {

@@ -13,10 +13,10 @@ export type CBAgentID = string;
 export interface CBAgent {
   id: CBAgentID;
   name: string;
-  face: string;
-  designation: string;
-  description: string;
-  introduction: string;
+  face?: string;
+  designation?: string;
+  description?: string;
+  introduction?: string;
   isActive: boolean;
   isAvailable: boolean;
   isBusy: boolean;

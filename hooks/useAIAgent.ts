@@ -1,3 +1,4 @@
+'use client'
 import { useCBSelector } from './useAgentSelector';
 import { type CBAgent } from '../types';
 

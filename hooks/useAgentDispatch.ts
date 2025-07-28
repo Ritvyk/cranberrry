@@ -1,3 +1,4 @@
+'use client'
 import { useCranberrryStore } from '../provider/CranberrryProvider';
 
 export function useCBDispatch() {

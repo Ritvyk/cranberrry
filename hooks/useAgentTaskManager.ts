@@ -1,3 +1,4 @@
+'use client'
 import { useCallback } from "react";
 import { type CBMessageBlock, type CBTask, type CBTaskStatus } from "../types";
 import { useCBDispatch } from "./useAgentDispatch";

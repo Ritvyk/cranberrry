@@ -1,3 +1,4 @@
+'use client'
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useCBTaskSupervisor } from "./useAgentSupervisor";
 import { useCBTaskManager } from "./useAgentTaskManager";
@@ -45,6 +46,9 @@ export function useCBController({
   const wrappedCallbacks = {
     ...callbacks,
     onComplete: () => {
+      console.log("onComplete", agentId)
+      console.log(currentTaskIdRef.current, agentId)
+
       if(currentTaskIdRef.current) {
         updateTask(currentTaskIdRef.current, { status: 'completed', updatedAt: Date.now() })
       }

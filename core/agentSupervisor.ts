@@ -1,3 +1,4 @@
+'use client'
 import type { CBTaskStatus } from "../types";
 import type { CBTagConfig, CBMessageBlock } from "../types";
 import {nanoid} from "nanoid"
@@ -43,7 +44,7 @@ export function createAgentSupervisor({
   function parseChunk(chunk: string) {
     if (status !== "ongoing") return;
     buffer += chunk;
-    console.log("parseChunk", buffer)
+
     let foundBlock = false;
     for (const tagConfig of tagConfigs) {
       const { tag, processor, component } = tagConfig;
@@ -77,7 +78,7 @@ export function createAgentSupervisor({
           meta: { taskId },
         };
         callbacks.onBlockProcessed?.(block);
-        console.log("onBlockProcessed", block)
+  
         emitter.emit('message', { taskId, block });
         buffer = buffer.slice(0, match.index) + buffer.slice(match.index + match[0].length);
         openTagPositions = openTagPositions.filter(t => !(t.tag === tag && t.index === match!.index));

@@ -1,3 +1,4 @@
+'use client'
 import { type CBTask, type CBTaskStatus } from "../types";
 import type { CBMessageBlock } from "../types";
 

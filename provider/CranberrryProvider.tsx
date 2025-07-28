@@ -1,3 +1,4 @@
+'use client'
 import  { type ReactNode, createContext, useContext } from 'react';
 import type { CBStore } from '../types';
 
