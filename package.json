@@ -54,8 +54,7 @@
     "prepublishOnly": "npm run clean && npm run build",
     "prepare": "npm run build",
     "typecheck": "tsc --noEmit",
-    "publish": "npm run clean && npm run build && npm publish",
-    "publish:dry-run": "npm run clean && npm run build && npm publish --dry-run"
+    "publish": "npm run clean && npm run build && npm publish"
   },
   "dependencies": {
     "mitt": "^3.0.1",
