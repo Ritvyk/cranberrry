@@ -85,6 +85,10 @@ export function useCBController({
         }
         callbacks.onBlockProcessed?.(block);
       },
+      onBlockFound: (tag: string) => {
+        callbacks.onBlockFound?.(tag);
+      },
+      
     },
     tagConfigs,
     emitter,

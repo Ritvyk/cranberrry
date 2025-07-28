@@ -80,7 +80,7 @@ export function createAgentSupervisor({
           taskId: currentTaskId,
         };
         callbacks.onBlockProcessed?.(block);
-        console.log("content", currentTaskId,block)
+
         emitter.emit('message', { taskId: currentTaskId, block });
         buffer = buffer.slice(0, match.index) + buffer.slice(match.index + match[0].length);
         openTagPositions = openTagPositions.filter(t => !(t.tag === tag && t.index === match!.index));

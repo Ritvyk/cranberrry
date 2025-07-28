@@ -9,5 +9,6 @@ export * from './hooks/useAgentDispatch';
 export * from './hooks/useAgentSelector';
 export * from './hooks/useAIAgent';
 export * from './hooks/useAgentController';
+export * from './hooks/useAgentSupervisor';
 export * from './provider/CranberrryProvider';
 export { CranberrryRenderer } from './provider/CranberrryRenderer';
