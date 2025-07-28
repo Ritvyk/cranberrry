@@ -53,16 +53,28 @@
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build",
     "prepare": "npm run build",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "publish": "npm run clean && npm run build && npm publish",
+    "publish:dry-run": "npm run clean && npm run build && npm publish --dry-run"
   },
   "dependencies": {
     "mitt": "^3.0.1",
-    "nanoid": "^5.1.5",
-    "react": "^19.1.0"
+    "nanoid": "^5.1.5"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react-dom": {
+      "optional": true
+    }
   },
   "devDependencies": {
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "tsup": "^8.0.2",
     "typescript": "^5.4.3"
   }

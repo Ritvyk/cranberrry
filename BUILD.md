@@ -4,6 +4,10 @@
 
 This package is built using **tsup**, a modern TypeScript bundler that provides fast, optimized builds with both CommonJS and ESM outputs.
 
+### React Compatibility
+
+This package supports **React 18 and higher** as peer dependencies, providing maximum compatibility across different React versions while avoiding strict coupling to specific React versions.
+
 ## Build Configuration
 
 ### Key Features
@@ -105,10 +109,15 @@ The `prepublishOnly` script ensures a clean build before publishing.
 ### Production
 - `mitt`: Event emitter
 - `nanoid`: ID generation
-- `react`: React framework
+
+### Peer Dependencies
+- `react`: >=18.0.0 (React 18 and higher)
+- `react-dom`: >=18.0.0 (optional)
 
 ### Development
 - `tsup`: TypeScript bundler
 - `typescript`: TypeScript compiler
 - `@types/react`: React type definitions
-- `@types/react-dom`: React DOM type definitions 
+- `@types/react-dom`: React DOM type definitions
+- `react`: React for development
+- `react-dom`: React DOM for development 

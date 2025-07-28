@@ -8,7 +8,7 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   treeshake: true,
-  external: ['react', 'react-dom'],
+  external: ['react', 'react-dom', 'react/jsx-runtime'],
   onSuccess: 'tsc --emitDeclarationOnly --declaration',
   esbuildOptions(options) {
     options.banner = {
