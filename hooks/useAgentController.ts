@@ -111,6 +111,42 @@ export function useCBController({
     [startTask, createTask, tagConfigs, agentId, dispatch]
   );
 
+  const startExistingAgentTask = useCallback(
+    (taskId: string) => {
+      const existingTask = getTask(taskId);
+      
+      if (!existingTask) {
+        throw new Error(`Task with ID ${taskId} not found`);
+      }
+
+      if (existingTask.agentId !== agentId) {
+        throw new Error(`Task ${taskId} does not belong to agent ${agentId}`);
+      }
+
+      // Check if task is in a valid state to resume
+      if (existingTask.status === 'completed') {
+        throw new Error(`Task ${taskId} is already completed and cannot be resumed`);
+      }
+
+      if (existingTask.status === 'failed') {
+        // Reset failed task to ongoing status
+        updateTask(taskId, { status: 'ongoing', updatedAt: Date.now() });
+      }
+
+      setPrompt(existingTask.input);
+      setErrorMessage(null);
+      setCurrentTaskId(taskId);
+      currentTaskIdRef.current = taskId;
+      dispatch(updateAgent({ id: agentId, isBusy: true }));
+      
+      // Start the task in the supervisor
+      startTask(taskId);
+      
+      return taskId;
+    },
+    [getTask, agentId, updateTask, startTask, dispatch]
+  );
+
   // Expose the error function for simulation
   const completeWithError = useCallback((err: string) => {
     setErrorMessage(err);
@@ -124,6 +160,7 @@ export function useCBController({
     isRunning,
     error: errorMessage || supervisorError,
     startAgentTask,
+    startExistingAgentTask,
     parseChunk,
     complete,
     reset,
