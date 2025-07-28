@@ -1,9 +1,25 @@
 {
   "name": "cranberrry",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "AI Agentic UI Framework For Frontend",
   "keywords": [
-    "agentic"
+    "agentic",
+    "ai",
+    "artificial-intelligence",
+    "agent",
+    "react",
+    "typescript",
+    "frontend",
+    "ui",
+    "framework",
+    "automation",
+    "chatbot",
+    "conversational-ai",
+    "ai-agent",
+    "react-hooks",
+    "state-management",
+    "typescript-library",
+    "npm-package"
   ],
   "homepage": "https://github.com/Ritvyk/cranberrry#readme",
   "bugs": {
