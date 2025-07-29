@@ -4,7 +4,6 @@ Cranberrry is a modern, type-safe, redux-inspired state management library for b
 
 This guide will help you to integrate cranberrry and run your first agent with just a few lines of code in your React application. Cranberrry is fairly customisable and you can hook it up with any particular UI of your choice whether it's custom UI or shadcn ui library. We give you pre-implemented complex logical skeletons to run your AI Agents in your React application so you can hook up any UI of your choice to it.
 
-> React Supported Version: ^19.1.0
 
 ## 🚀 Installation
 
